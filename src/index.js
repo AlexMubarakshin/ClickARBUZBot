@@ -29,7 +29,7 @@ async function processAccount({ api, account, profile }) {
     throw error;
   }
 
-  const clicksAfterClick = profile.clicks + (count * profile.clickBoostSum);
+  const clicksAfterClick = profile.clicks + clickResponse.count;
   logger.info(`${accountLogInfoPrefix} Clicked ${count} times. Energy: ${Math.round(clickResponse.currentEnergy)}/${profile.energyLimit}. Clicks: ${clicksAfterClick}.`);
 
   return clickResponse;
@@ -108,7 +108,7 @@ async function main() {
 
       account.profile.energy = result.currentEnergy;
       account.profile.lastClickSeconds = result.lastClickSeconds;
-      account.profile.clicks += result.count * account.profile.clickBoostSum;
+      account.profile.clicks += result.count;
     };
 
     const processingResults = await Promise.allSettled(accounts.map(process));
