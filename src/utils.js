@@ -12,7 +12,12 @@ function unixToDate(unix) {
   return new Date(unix * 1000);
 }
 
+function prettifyNumber(number) {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
 module.exports = {
+  prettifyNumber,
   unixToDate,
   randomBetween,
   wait,

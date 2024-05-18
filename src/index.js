@@ -4,7 +4,7 @@ const getEnvironments = require("./environments");
 const getClickHash = require("./hash");
 const logger = require("./logger");
 const process = require("process");
-const { randomBetween, wait, unixToDate } = require("./utils");
+const { randomBetween, wait, unixToDate, prettifyNumber } = require("./utils");
 
 async function processAccount({ api, account, profile }) {
   const hash = getClickHash({
@@ -94,7 +94,7 @@ async function main() {
 
       ⚡️ Energy: ${logger.formatters.makeBold(Math.round(profile.energy) + '/' + profile.energyLimit)}
       🔋 Enery per minute: ${logger.formatters.makeBold(Math.round(profile.energyBoostSum * 60))}
-      👆 Clicks: ${logger.formatters.makeBold(profile.clicks)}
+      👆 Clicks: ${logger.formatters.makeBold(prettifyNumber(profile.clicks))}
       🔬 Research Points: ${logger.formatters.makeBold(profile.researchPoints)}
       🕒 Last click: ${logger.formatters.makeBold(unixToDate(profile.lastClickSeconds).toLocaleString())}
   `);
