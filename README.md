@@ -31,6 +31,8 @@ Autoclicker script for ClickARBUZ. This script automates the process of clicking
    ```
    ACCOUNT_1_TG_RAW_DATA="123456789:ABCDEFGH"
    ACCOUNT_1_USER_AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+
+   PROCESS_STEP_DELAYS_IN_SECONDS="10,30"
    ```
 2. Run the application:
    ```bash

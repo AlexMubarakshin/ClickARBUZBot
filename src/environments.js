@@ -41,7 +41,7 @@ function parseEnvAccounts(envs) {
  * @returns {Array} - Array of valid accounts
  */
 function filterValidAccounts(accounts) {
-  return accounts.reduce((acc, [NAME, { USER_AGENT, TG_RAW_DATA,  }]) => {
+  return accounts.reduce((acc, [NAME, { USER_AGENT, TG_RAW_DATA, }]) => {
     if (NAME && USER_AGENT && TG_RAW_DATA) {
       return [...acc, { NAME, USER_AGENT, TG_RAW_DATA }];
     }
@@ -50,12 +50,30 @@ function filterValidAccounts(accounts) {
   }, []);
 }
 
+function parseStepsDelay(envs) {
+  const DEFAULT_DELAYS = [10, 30];
+  // PROCESS_STEP_DELAYS_IN_SECONDS
+
+  const delaysRaw = envs.PROCESS_STEP_DELAYS_IN_SECONDS;
+  if (!delaysRaw) {
+    return DEFAULT_DELAYS;
+  }
+
+  const delays = delaysRaw.split(',').map((delay) => parseInt(delay, 10));
+  if (delays.length !== 2) {
+    return DEFAULT_DELAYS;
+  }
+
+  return delays;
+}
+
 
 function getEnvironments() {
   const accounts = parseEnvAccounts(process.env);
 
   return {
     accounts: filterValidAccounts(accounts),
+    stepsDelays: parseStepsDelay(process.env)
   };
 }
 

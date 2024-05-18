@@ -29,7 +29,8 @@ async function processAccount({ api, account, profile }) {
     throw error;
   }
 
-  logger.info(`${accountLogInfoPrefix} Clicked ${count} times. Energy: ${Math.round(clickResponse.currentEnergy)}/${profile.energyLimit}`);
+  const clicksAfterClick = profile.clicks + (count * profile.clickBoostSum);
+  logger.info(`${accountLogInfoPrefix} Clicked ${count} times. Energy: ${Math.round(clickResponse.currentEnergy)}/${profile.energyLimit}. Clicks: ${clicksAfterClick}.`);
 
   return clickResponse;
 }
@@ -92,7 +93,8 @@ async function main() {
     logger.info(`
     Stats for account ${account.NAME} (${profile.username})):
 
-      ⚡️ Energy: ${logger.formatters.makeBold(profile.energy + '/' + profile.energyLimit)}
+      ⚡️ Energy: ${logger.formatters.makeBold(Math.round(profile.energy) + '/' + profile.energyLimit)}
+      🔋 Enery per minute: ${logger.formatters.makeBold(Math.round(profile.energyBoostSum * 60))}
       👆 Clicks: ${logger.formatters.makeBold(profile.clicks)}
       🔬 Research Points: ${logger.formatters.makeBold(profile.researchPoints)}
       🕒 Last click: ${logger.formatters.makeBold(unixToDate(profile.lastClickSeconds).toLocaleString())}
@@ -106,6 +108,7 @@ async function main() {
 
       account.profile.energy = result.currentEnergy;
       account.profile.lastClickSeconds = result.lastClickSeconds;
+      account.profile.clicks += result.count * account.profile.clickBoostSum;
     };
 
     const processingResults = await Promise.allSettled(accounts.map(process));
@@ -119,11 +122,11 @@ async function main() {
           return;
         }
 
-        logger.error(`Error processing account ${result.account.NAME} (${result.account.profile.username}): ${error.message}`);
+        logger.error(`Error processing account: ${error.message}`);
       }
     });
 
-    const delay = randomBetween(5, 20);
+    const delay = randomBetween(envnvironments.stepsDelays[0], envnvironments.stepsDelays[1]);
 
     logger.info(`Waiting ${delay} seconds before the next click...`);
 
