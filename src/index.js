@@ -25,6 +25,7 @@ async function processAccount({ api, account, profile }) {
     const error = new Error(`Invalid response from the server: ${JSON.stringify(clickResponse)}`);
     error.resposne = clickResponse;
     error.account = account;
+    error.profile = profile;
 
     throw error;
   }
@@ -116,7 +117,7 @@ async function main() {
       if (result.status === 'rejected') {
         const error = result.reason;
         if (error.account) {
-          logger.error(`Error processing account ${error.account.NAME} (${error.account.profile.username}): ${error.message}`);
+          logger.error(`Error processing account ${error.account.NAME} (${error.profile.username}): ${error.message}`);
           return;
         }
 
