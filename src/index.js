@@ -10,17 +10,16 @@ const envnvironments = getEnvironments();
 
 const logger = createLogger(envnvironments.palette);
 
-const MAX_ENERGY_TO_CLICK = 110;
-const MIN_ENERGY_TO_CLICK = 50;
-
 async function processAccount({ api, account, profile }) {
   const hash = getClickHash({
     userId: profile.id,
     lastClickSeconds: profile.lastClickSeconds,
-    secretKey: 'click-secret',
+    secretKey: constants.ARBUZ_SECRET,
   });
 
-  const count = profile.energy > MAX_ENERGY_TO_CLICK ? randomBetween(MIN_ENERGY_TO_CLICK, MAX_ENERGY_TO_CLICK) : Math.round(profile.energy * 0.8);
+  const count = profile.energy > constants.MAX_ENERGY_TO_CLICK ?
+    randomBetween(constants.MIN_ENERGY_TO_CLICK, constants.MAX_ENERGY_TO_CLICK)
+    : Math.round(profile.energy * 0.8);
 
   const accountLogInfoPrefix = `[${account.NAME}] (${profile.username}) -`;
 
@@ -76,7 +75,6 @@ async function main() {
       throw new Error(`Account ${account.NAME} (${me.username}) has been banned:`);
     }
 
-
     return {
       account,
       api,
@@ -85,6 +83,13 @@ async function main() {
   });
 
   const results = await Promise.allSettled(acoountsInformationsPromises);
+  const getMeErrors = results.filter((result) => result.status === 'rejected');
+  if (getMeErrors.length) {
+    logger.error('Errors getting the accounts information:');
+  }
+  getMeErrors.forEach((error) => {
+    logger.error(error.reason);
+  });
 
   const accounts = results.filter((result) => result.status === 'fulfilled').map((result) => result.value);
   if (!accounts.length) {

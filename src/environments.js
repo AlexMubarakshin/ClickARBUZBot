@@ -1,3 +1,5 @@
+const constants = require('./constants');
+
 /**
  * Parse the environment variables to get the accounts (useragents and raw data)
  * 
@@ -51,29 +53,26 @@ function filterValidAccounts(accounts) {
 }
 
 function parseStepsDelay(envs) {
-  const DEFAULT_DELAYS = [10, 30];
-  // PROCESS_STEP_DELAYS_IN_SECONDS
 
   const delaysRaw = envs.PROCESS_STEP_DELAYS_IN_SECONDS;
   if (!delaysRaw) {
-    return DEFAULT_DELAYS;
+    return constants.DEFAULT_DELAYS;
   }
 
   const delays = delaysRaw.split(',').map((delay) => parseInt(delay, 10));
   if (delays.length !== 2) {
-    return DEFAULT_DELAYS;
+    return constants.DEFAULT_DELAYS;
   }
 
   return delays;
 }
 
 function parsePaletteVariant(envs) {
-  const validPaletteVariants = ['LIGHT', 'DARK'];
   const cliPaletteVariantRaw = envs.CLI_PALETTE_VARIANT;
 
-  const isVariantValid = validPaletteVariants.includes(cliPaletteVariantRaw.toUpperCase());
+  const isVariantValid = constants.validPaletteVariants.includes(cliPaletteVariantRaw.toUpperCase());
   if (!isVariantValid) {
-    return 'LIGHT';
+    return constants.DEFAILT_PALETTE_VARIANT;
   }
 
   return cliPaletteVariantRaw.toUpperCase();
