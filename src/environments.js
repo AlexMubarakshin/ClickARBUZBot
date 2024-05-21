@@ -70,7 +70,7 @@ function parseStepsDelay(envs) {
 function parsePaletteVariant(envs) {
   const cliPaletteVariantRaw = envs.CLI_PALETTE_VARIANT;
 
-  const isVariantValid = constants.validPaletteVariants.includes(cliPaletteVariantRaw.toUpperCase());
+  const isVariantValid = cliPaletteVariantRaw && constants.VALID_PALETTE_VARIANTS.includes(cliPaletteVariantRaw.toUpperCase());
   if (!isVariantValid) {
     return constants.DEFAILT_PALETTE_VARIANT;
   }
