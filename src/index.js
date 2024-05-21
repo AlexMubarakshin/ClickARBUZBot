@@ -2,9 +2,16 @@ const createApi = require("./api");
 const constants = require('./constants');
 const getEnvironments = require("./environments");
 const getClickHash = require("./hash");
-const logger = require("./logger");
+const createLogger = require("./logger");
 const process = require("process");
 const { randomBetween, wait, unixToDate, prettifyNumber } = require("./utils");
+
+const envnvironments = getEnvironments();
+
+const logger = createLogger(envnvironments.palette);
+
+const MAX_ENERGY_TO_CLICK = 110;
+const MIN_ENERGY_TO_CLICK = 50;
 
 async function processAccount({ api, account, profile }) {
   const hash = getClickHash({
@@ -12,7 +19,8 @@ async function processAccount({ api, account, profile }) {
     lastClickSeconds: profile.lastClickSeconds,
     secretKey: 'click-secret',
   });
-  const count = profile.energy > 100 ? randomBetween(10, 100) : Math.round(profile.energy * 0.8);
+
+  const count = profile.energy > MAX_ENERGY_TO_CLICK ? randomBetween(MIN_ENERGY_TO_CLICK, MAX_ENERGY_TO_CLICK) : Math.round(profile.energy * 0.8);
 
   const accountLogInfoPrefix = `[${account.NAME}] (${profile.username}) -`;
 
@@ -39,7 +47,6 @@ async function main() {
   logger.info(`Starting the ${logger.formatters.makeBold(constants.APPLICATION_NAME)} application ...`);
   logger.info(`💖 Enjoying the app? Send a thank you with a donation: ${logger.formatters.makeBold('0x75aB5a3310B7A00ac4C82AC83e0A59538CA35fEE')}`);
 
-  const envnvironments = getEnvironments();
 
   if (!envnvironments.accounts.length) {
     logger.error(`No accounts found in the ${logger.formatters.makeBold(".env")} file

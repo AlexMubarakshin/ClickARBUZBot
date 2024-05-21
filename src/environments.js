@@ -67,13 +67,25 @@ function parseStepsDelay(envs) {
   return delays;
 }
 
+function parsePaletteVariant(envs) {
+  const validPaletteVariants = ['LIGHT', 'DARK'];
+  const cliPaletteVariantRaw = envs.CLI_PALETTE_VARIANT;
+
+  const isVariantValid = validPaletteVariants.includes(cliPaletteVariantRaw.toUpperCase());
+  if (!isVariantValid) {
+    return 'LIGHT';
+  }
+
+  return cliPaletteVariantRaw.toUpperCase();
+}
 
 function getEnvironments() {
   const accounts = parseEnvAccounts(process.env);
 
   return {
     accounts: filterValidAccounts(accounts),
-    stepsDelays: parseStepsDelay(process.env)
+    stepsDelays: parseStepsDelay(process.env),
+    palette: parsePaletteVariant(process.env)
   };
 }
 

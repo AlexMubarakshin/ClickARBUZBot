@@ -21,19 +21,23 @@ Autoclicker script for ClickARBUZ. This script automates the process of clicking
    npm install
    ```
 4. Create `.env` file
-    ```bash
-    cp ./.env.example ./.env
-    ```
+   ```bash
+   cp ./.env.example ./.env
+   ```
 
 ## Usage
 
 1. Set up your `.env` file with your account information. Here's an example:
-   ```
+
+   ```bash
    ACCOUNT_1_TG_RAW_DATA="123456789:ABCDEFGH"
    ACCOUNT_1_USER_AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
 
    PROCESS_STEP_DELAYS_IN_SECONDS="10,30"
+
+   CLI_PALETTE_VARIANT="DARK" # (Or "LIGHT")
    ```
+
 2. Run the application:
    ```bash
    npm run start
